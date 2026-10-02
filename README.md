@@ -69,6 +69,32 @@ The following values are from the tuned-model runs recorded in `experiments/mlfl
 
 These are the logged values for the tuned runs in the local tracking database. The checked-in KNN artifact's parameters (`n_neighbors=3`, `weights=distance`) are consistent with the KNN model saved for inference.
 
+### Notebook result charts
+
+The following figures reproduce the accuracy comparisons and dataset summaries saved or shown in the experiment notebook. The initial model comparisons and tuned comparison are separate notebook runs, so their values may differ from the MLflow table above.
+
+**Accuracy after hyperparameter tuning**
+
+![Accuracy after hyperparameter tuning for Random Forest, KNN, and Decision Tree](assets/results/tuned-model-accuracy.svg)
+
+**Eight-model accuracy comparison**
+
+![Accuracy comparison for Logistic Regression, SVM, Decision Tree, Random Forest, Gradient Boosting, KNN, Naive Bayes, and XGBoost](assets/results/model-accuracy-comparison.svg)
+
+**Six-model baseline accuracy comparison**
+
+![Baseline accuracy comparison for Logistic Regression, Decision Tree, Random Forest, SVM, KNN, and Naive Bayes](assets/results/baseline-model-accuracy.svg)
+
+**Confusion matrix**
+
+![Confusion matrix with true negatives 8864, false positives 504, false negatives 82, and true positives 2232](assets/results/confusion-matrix.svg)
+
+The notebook creates this matrix from predictions over the full processed feature dataset, rather than a separate held-out test set; treat it as an exploratory visualization, not a test-set score.
+
+**Target class counts in the processed dataset**
+
+![Processed dataset target counts: 9368 non-thunderstorm records and 2314 thunderstorm records](assets/results/target-class-counts.svg)
+
 ## 🔬 MLflow Experiment Tracking
 
 The experiment notebook sets the experiment name to `Thunderstorm_Prediction_ML` and logs tuned-model parameters, classification and meteorological metrics, and scikit-learn model artifacts. The associated tracking database is `experiments/mlflow.db`, with model artifact directories under `experiments/mlruns/`. The root-level `mlflow.db` is also present but currently contains no runs.
