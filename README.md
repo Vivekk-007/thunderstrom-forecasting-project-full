@@ -53,3 +53,18 @@ The model predicts thunderstorm occurrence using the following atmospheric param
 
 
 
+
+## Run locally
+
+Install the runtime dependencies into the project environment, then start the API and frontend in separate terminals from the project root:
+
+```powershell
+uv sync
+uv run uvicorn api.main:app --host 127.0.0.1 --port 8000
+```
+
+```powershell
+uv run streamlit run streamlit_app/ui.py
+```
+
+The API serves `POST /predict`, `GET /`, and `GET /health`. The Streamlit app uses `http://127.0.0.1:8000` by default; set `API_URL` to a different API base URL when needed. The model is loaded from `models/KNN_best_model.pkl` relative to the project, regardless of the current working directory.

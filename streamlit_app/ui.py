@@ -1,7 +1,10 @@
+import os
+
 import streamlit as st  # frontend UI
 import requests
 
-API_URL = "http://localhost:8000/predict"
+API_BASE_URL = os.getenv("API_URL", "http://127.0.0.1:8000").rstrip("/")
+API_URL = f"{API_BASE_URL}/predict"
 
 # fast api runs
 
@@ -30,11 +33,21 @@ if st.button("Predict"):
         "Moisture_Temperature_Profiles": Moisture_Temperature_Profiles,
     }
 
-    response = requests.post(API_URL, json=payload)
-
-    if response.status_code == 200:
+    try:
+        response = requests.post(API_URL, json=payload, timeout=15)
+        response.raise_for_status()
         result = response.json()
         st.success(f"Prediction: {result['prediction']}")
-        st.info(f"Probability: {result['probability']}")
-    else:
-        st.error("API error. Check FastAPI backend.")
+        if result.get("probability") is not None:
+            st.info(f"Probability: {result['probability']:.4f}")
+    except requests.exceptions.ConnectionError:
+        st.error(
+            f"Cannot connect to the prediction API at {API_BASE_URL}. "
+            "Start it with `uvicorn api.main:app --host 127.0.0.1 --port 8000`."
+        )
+    except requests.exceptions.Timeout:
+        st.error("The prediction API took too long to respond. Please try again.")
+    except requests.exceptions.RequestException as exc:
+        st.error(f"The prediction API returned an error: {exc}")
+    except (ValueError, KeyError) as exc:
+        st.error(f"The prediction API returned an invalid response: {exc}")

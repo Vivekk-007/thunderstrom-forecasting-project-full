@@ -12,6 +12,11 @@ app = FastAPI(title="Thunderstrom Prediction API")
 def home():
     return {"message": "Weather Prediction API is running"}
 
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 # microservice
 
 @app.post("/predict")
